@@ -1,5 +1,6 @@
-import socket
 import pickle
+import socket
+import traceback
 
 class Client():
     def __init__(self, host, port):
@@ -8,6 +9,7 @@ class Client():
         self.port = port
         self.socket = socket.socket(socket.AF_INET,
                 socket.SOCK_STREAM)
+
 
     def decode_msg(self, msg):
         return pickle.loads(msg)
@@ -22,6 +24,8 @@ class Client():
                 msg = self.socket.recv(512)
                 print(self.decode_msg(msg))
                 s = input("--> Option:")
+                if s == "\n":
+                    continue
                 self.socket.send(self.encode_msg(s))
             except KeyboardInterrupt:
                 print('KeyboardInterrupt: stopping mainloop')
@@ -29,4 +33,4 @@ class Client():
                 continue
             except:
                 traceback.print_exc()
-                continue
+                return
